@@ -46,7 +46,17 @@ public class TscfgJavaGeneratorMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", required = true, readonly = true)
   private MavenProject project;
+  
+  @Parameter(defaultValue = "false")
+  private boolean scalaBackticks;
+  
+  @Parameter(defaultValue = "false")
+  private boolean javaGetters;
 
+  @Parameter(defaultValue = "false")
+  private boolean j7;
+  
+  @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     GenResult generatorResult = generateJavaCodeForTemplate(templateFile);
     writeGeneratedCodeToJavaFile(generatorResult.code());
@@ -56,7 +66,7 @@ public class TscfgJavaGeneratorMojo extends AbstractMojo {
   }
 
   private GenResult generateJavaCodeForTemplate(File templateFile) throws MojoExecutionException {
-    Generator tscfgGenerator = new JavaGen(new GenOpts(packageName, className, false));
+    Generator tscfgGenerator = new JavaGen(new GenOpts(packageName, className, j7, scalaBackticks, javaGetters));
     return tscfgGenerator.generate(ModelBuilder.apply(readTscfgTemplate(templateFile)).objectType());
   }
 
